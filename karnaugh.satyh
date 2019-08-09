@@ -1,0 +1,204 @@
+@require: gr
+
+let cap-round-left r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x1     , y0     )
+      |> line-to   (x0 +' r, y0     )
+      |> bezier-to (x0 +' t, y0     )
+                   (x0     , y0 +' t)
+                   (x0     , y0 +' r)
+      |> line-to   (x0     , y1 -' r)
+      |> bezier-to (x0     , y1 -' t)
+                   (x0 +' t, y1     )
+                   (x0 +' r, y1     )
+      |> line-to   (x1     , y1     )
+      |> terminate-path
+
+let cap-round-upper-left r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x0     , y0     )
+      |> line-to   (x0     , y1 -' r)
+      |> bezier-to (x0     , y1 -' t)
+                   (x0 +' t, y1     )
+                   (x0 +' r, y1     )
+      |> line-to   (x1     , y1     )
+      |> terminate-path
+
+let cap-round-lower-left r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x1     , y0     )
+      |> line-to   (x0 +' r, y0     )
+      |> bezier-to (x0 +' t, y0     )
+                   (x0     , y0 +' t)
+                   (x0     , y0 +' r)
+      |> line-to   (x0     , y1     )
+      |> terminate-path
+
+let cap-round-right r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x0     , y0     )
+      |> line-to   (x1 -' r, y0     )
+      |> bezier-to (x1 -' t, y0     )
+                   (x1     , y0 +' t)
+                   (x1     , y0 +' r)
+      |> line-to   (x1     , y1 -' r)
+      |> bezier-to (x1     , y1 -' t)
+                   (x1 -' t, y1     )
+                   (x1 -' r, y1     )
+      |> line-to   (x0     , y1     )
+      |> terminate-path
+
+let cap-round-lower-right r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x0     , y0     )
+      |> line-to   (x1 -' r, y0     )
+      |> bezier-to (x1 -' t, y0     )
+                   (x1     , y0 +' t)
+                   (x1     , y0 +' r)
+      |> line-to   (x1     , y1     )
+      |> terminate-path
+
+let cap-round-upper-right r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x1     , y0     )
+      |> line-to   (x1     , y1 -' r)
+      |> bezier-to (x1     , y1 -' t)
+                   (x1 -' t, y1     )
+                   (x1 -' r, y1     )
+      |> line-to   (x0     , y1     )
+      |> terminate-path
+
+let cap-round-lower r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x0     , y1     )
+      |> line-to   (x0     , y0 +' r)
+      |> bezier-to (x0     , y0 +' t)
+                   (x0 +' t, y0     )
+                   (x0 +' r, y0     )
+      |> line-to   (x1 -' r, y0     )
+      |> bezier-to (x1 -' t, y0     )
+                   (x1     , y0 +' t)
+                   (x1     , y0 +' r)
+      |> line-to   (x1     , y1     )
+      |> terminate-path
+
+let cap-round-upper r (xA, yA) (xB, yB) =
+  let t = r *' 0.4 in
+  let x0 = length-min xA xB in
+  let x1 = length-max xA xB in
+  let y0 = length-min yA yB in
+  let y1 = length-max yA yB in
+    start-path     (x0     , y0     )
+      |> line-to   (x0     , y1 -' r)
+      |> bezier-to (x0     , y1 -' t)
+                   (x0 +' t, y1     )
+                   (x0 +' r, y1     )
+      |> line-to   (x1 -' r, y1     )
+      |> bezier-to (x1 -' t, y1     )
+                   (x1     , y1 -' t)
+                   (x1     , y1 -' r)
+      |> line-to   (x1     , y0     )
+      |> terminate-path
+
+let select (ix0, iy0) (ix1, iy1) xs ys =
+  let-rec nth idx lst =
+    Option.from 0pt (List.nth idx lst) 
+  in
+  let x0 = nth ix0 xs +' 2pt in
+  let y0 = nth iy0 ys -' 2pt in
+  let x1 = nth (ix1 + 1) xs -' 2pt in
+  let y1 = nth (iy1 + 1) ys +' 2pt in
+  let x-start = nth 0 xs -' 2pt in
+  let y-start = nth 0 ys +' 2pt in
+  let x-end = nth 0 (List.reverse xs) +' 2pt in
+  let y-end = nth 0 (List.reverse ys) -' 2pt in
+  let graphs = (
+    match (ix0 <= ix1, iy0 <= iy1) with
+    | (true, true) ->
+      [ Gr.rectangle-round 3pt (x0, y0) (x1, y1) ]
+    | (true, false) -> [
+      cap-round-upper 3pt (x0, y0) (x1, y-end);
+      cap-round-lower 3pt (x0, y-start) (x1, y1);
+    ]
+    | (false, true) -> [
+      cap-round-left  3pt (x0, y0) (x-end, y1);
+      cap-round-right 3pt (x-start, y0) (x1, y1);
+    ]
+    | (false, false) -> [
+      cap-round-upper-left  3pt (x0, y0) (x-end, y-end);
+      cap-round-upper-right 3pt (x-start, y0) (x1, y-end);
+      cap-round-lower-left  3pt (x0, y-start) (x-end, y1);
+      cap-round-lower-right 3pt (x-start, y-start) (x1, y1);
+    ]
+  ) in
+  List.map (stroke 1pt Color.black) graphs
+
+let-math \dontcare = math-char MathOrd `∅`
+
+let ruled-lines xs ys =
+  let line p0 p1 =
+    stroke 0.5pt Color.black (Gr.line p0 p1)
+  in
+  let hlines = (
+    match (xs, List.reverse xs) with
+    | (x0 :: _, xlast :: _) -> List.map (fun y ->  line (x0, y) (xlast, y)) ys
+    | _ -> []
+  ) in
+  let vlines = (
+    match (ys, List.reverse ys) with
+    | (y0 :: _, ylast :: _) -> List.map (fun x -> line (x, y0) (x, ylast)) xs
+    | _ -> []
+  ) in
+  List.append vlines hlines
+ 
+ let binaries xs =
+   let-rec f
+     | (_ :: _ :: tail) acc = 
+       f tail (List.append
+         (List.map (fun bin -> ${0#bin}) acc)
+         (List.map (fun bin -> ${1#bin}) acc)
+       )
+     | _ acc = acc
+   in
+     f xs [${}]
+
+let-inline ctx \karnaugh contents selections =
+  let make-contents-cells cellf _ _ =
+    contents |> List.map (List.map (fun c -> cellf {${#c}}))
+  in
+  let make-lines xs ys =
+    List.map (fun s -> s xs ys) selections
+      |> List.concat 
+      |> List.append (ruled-lines xs ys)
+  in
+    read-inline ctx {
+      \tabular(make-contents-cells)(make-lines);
+    }
