@@ -204,22 +204,15 @@ end = struct
     | f (x :: xs) (y :: ys) = (f x y) :: list-map2 f xs ys
   
   let-inline ctx \karnaugh-map math-labelx math-labely contents selections =
-    let pads = (4pt, 4pt, 4pt, 4pt) in
-    let cellf it =
-      NormalCell(pads, inline-fil ++ (read-inline ctx it) ++ inline-fil) in
-    let multif nr nc it =
-      MultiCell(nr, nc, pads, inline-fil ++ (read-inline ctx it) ++ inline-fil) in
-    let empty =
-      EmptyCell in
     let math-to cellf math = cellf {${#math}} in
     let content-line0 = (
       match contents with
       | line0 :: _ -> line0
       | _          -> []
     ) in
-    let fn-headery cellf _ _ =
+    let fn-headery cellf multif empty =
       binaries contents |> List.map (math-to cellf) in
-    let fn-headerx cellf _ _ = 
+    let fn-headerx cellf multif empty = 
       binaries content-line0 |> List.map (math-to cellf)
     in
     let tail-fill line x = (
@@ -227,25 +220,28 @@ end = struct
       | _ :: tail -> List.map (fun _ -> x) tail
       | _         -> []
     ) in
-    let fn-labely cellf _ empty =
+    let fn-labely cellf multif empty =
       let tall-cell-label =
         multif (List.length contents) 1 {${#math-labely}}
       in
         tall-cell-label :: (tail-fill contents empty)
     in
-    let fn-labelx cellf _ empty =
+    let fn-labelx cellf multif empty =
       let wide-cell-label =
         multif 1 (List.length content-line0) {${#math-labelx}}
       in
         wide-cell-label :: (tail-fill content-line0 empty)
     in
-    let fn-content-cells cellf _ _ =
+    let fn-content-cells cellf multif empty =
       List.map (List.map (math-to cellf)) contents
     in
     let fn-cells cellf multif empty =
       let apply f = f cellf multif empty in
       let cons x xs = x :: xs in
-      let line-labelx = empty :: empty :: (apply fn-labelx) in
+      % TODO? SATySFi seems to calculate the height of a row only containing EmptyCell or MultiCell as 0.
+      let dummy = NormalCell((4pt, 4pt, 4pt, 4pt), (read-inline (ctx |> set-text-color Color.white) {?})) in
+      let line-labelx = dummy :: empty :: (apply fn-labelx) in
+      %                 ^^^^^
       let line-headerx = empty :: empty :: (apply fn-headerx) in
       let line-rest =
         list-map2 cons (apply fn-headery) (apply fn-content-cells)
@@ -258,11 +254,20 @@ end = struct
         |> List.concat 
         |> List.append (ruled-lines xs ys)
     in
-    let fn-rule xs ys =
+    let fn-rule xs ys = (
       match (xs, ys) with
       | (_ :: _ :: xs, _ :: _ :: ys) -> fn-content-rule xs ys
       | _ -> []
+    )
     in
+    let pads = (4pt, 4pt, 4pt, 4pt) in
+    let cellf it =
+      NormalCell(pads, inline-fil ++ (read-inline ctx it) ++ inline-fil)
+    in
+    let multif nr nc it =
+      MultiCell(nr, nc, pads, inline-fil ++ (read-inline ctx it) ++ inline-fil)
+    in
+    let empty = EmptyCell in
       tabular (fn-cells cellf multif empty) (fn-rule)
 
 end
