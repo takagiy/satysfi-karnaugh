@@ -1,3 +1,5 @@
+@require: list
+@require: color
 @require: gr
 
 module Karnaugh : sig
