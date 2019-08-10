@@ -195,25 +195,55 @@ let-rec list-map2
   | f _ [] = []
   | f (x :: xs) (y :: ys) = (f x y) :: list-map2 f xs ys
 
-let-inline ctx \karnaugh it-labelx it-labely contents selections =
-  let fn-headery cellf _ _ =
-    binaries contents |> List.map (fun l -> cellf {${#l}}) in
-  let fn-headerx cellf _ _ = (
+let-inline ctx \karnaugh math-labelx math-labely contents selections =
+  let pads = (4pt, 4pt, 4pt, 4pt) in
+  let cellf it =
+    NormalCell(pads, inline-fil ++ (read-inline ctx it) ++ inline-fil) in
+  let multif nr nc it =
+    MultiCell(nr, nc, pads, inline-fil ++ (read-inline ctx it) ++ inline-fil) in
+  let empty =
+    EmptyCell in
+  let math-to cellf math = cellf {${#math}} in
+  let content-line0 = (
     match contents with
-    | line0 :: _ -> binaries line0
+    | line0 :: _ -> line0
     | _          -> []
-  ) |> List.map (fun l -> cellf {${#l}})
+  ) in
+  let fn-headery cellf _ _ =
+    binaries contents |> List.map (math-to cellf) in
+  let fn-headerx cellf _ _ = 
+    binaries content-line0 |> List.map (math-to cellf)
+  in
+  let tail-fill line x = (
+    match line with
+    | _ :: tail -> List.map (fun _ -> x) tail
+    | _         -> []
+  ) in
+  let fn-labely cellf _ empty =
+    let tall-cell-label =
+      multif (List.length contents) 1 {${#math-labely}}
+    in
+      tall-cell-label :: (tail-fill contents empty)
+  in
+  let fn-labelx cellf _ empty =
+    let wide-cell-label =
+      multif 1 (List.length content-line0) {${#math-labelx}}
+    in
+      wide-cell-label :: (tail-fill content-line0 empty)
   in
   let fn-content-cells cellf _ _ =
-    List.map (List.map (fun c -> cellf {${#c}})) contents
+    List.map (List.map (math-to cellf)) contents
   in
   let fn-cells cellf multif empty =
     let apply f = f cellf multif empty in
-    let line0 = empty :: (apply fn-headerx) in
+    let cons x xs = x :: xs in
+    let line-labelx = empty :: empty :: (apply fn-labelx) in
+    let line-headerx = empty :: empty :: (apply fn-headerx) in
     let line-rest =
-      list-map2 (fun a b -> a :: b) (apply fn-headery) (apply fn-content-cells)
+      list-map2 cons (apply fn-headery) (apply fn-content-cells)
+        |> list-map2 cons (apply fn-labely)
     in
-      line0 :: line-rest
+      line-labelx :: line-headerx :: line-rest
   in
   let fn-content-rule xs ys =
     List.map (fun s -> s xs ys) selections
@@ -222,9 +252,7 @@ let-inline ctx \karnaugh it-labelx it-labely contents selections =
   in
   let fn-rule xs ys =
     match (xs, ys) with
-    | (_ :: xs, _ :: ys) -> fn-content-rule xs ys
+    | (_ :: _ :: xs, _ :: _ :: ys) -> fn-content-rule xs ys
     | _ -> []
   in
-    read-inline ctx {
-      \tabular(fn-cells)(fn-rule);
-    }
+    tabular (fn-cells cellf multif empty) (fn-rule)
