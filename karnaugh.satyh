@@ -5,6 +5,14 @@
 module Karnaugh : sig
 
   val select           : (int * int) -> (int * int) -> length list -> length list -> graphics list
+  val select-size      :  int -> int -> (int * int) -> length list -> length list -> graphics list
+  val minimum          : (int * int) -> length list -> length list -> graphics list
+  val box              : (int * int) -> length list -> length list -> graphics list
+  val tall             : (int * int) -> length list -> length list -> graphics list
+  val wide             : (int * int) -> length list -> length list -> graphics list
+  val slim             : (int * int) -> length list -> length list -> graphics list
+  val flat             : (int * int) -> length list -> length list -> graphics list
+  val large            : (int * int) -> length list -> length list -> graphics list
   direct \karnaugh-map : [math; math; (math list) list; (length list -> length list -> graphics list) list] inline-cmd
   direct \dontcare     : [] math-cmd
 
@@ -138,39 +146,62 @@ end = struct
         |> line-to   (x1     , y0     )
         |> terminate-path
   
-  let select (ix0, iy0) (ix1, iy1) xs ys =
+  let select (x0, y0) (x1, y1) xs ys =
     let-rec nth idx lst =
       Option.from 0pt (List.nth idx lst) 
     in
-    let x0 = nth ix0 xs +' 2pt in
-    let y0 = nth iy0 ys -' 2pt in
-    let x1 = nth (ix1 + 1) xs -' 2pt in
-    let y1 = nth (iy1 + 1) ys +' 2pt in
+    let lx0 = nth x0 xs +' 2pt in
+    let ly0 = nth y0 ys -' 2pt in
+    let lx1 = nth (x1 + 1) xs -' 2pt in
+    let ly1 = nth (y1 + 1) ys +' 2pt in
     let x-start = nth 0 xs -' 2pt in
     let y-start = nth 0 ys +' 2pt in
     let x-end = nth 0 (List.reverse xs) +' 2pt in
     let y-end = nth 0 (List.reverse ys) -' 2pt in
     let graphs = (
-      match (ix0 <= ix1, iy0 <= iy1) with
+      match (x0 <= x1, y0 <= y1) with
       | (true, true) ->
-        [ Gr.rectangle-round 3pt (x0, y0) (x1, y1) ]
+        [ Gr.rectangle-round 3pt (lx0, ly0) (lx1, ly1) ]
       | (true, false) -> [
-        cap-round-upper 3pt (x0, y0) (x1, y-end);
-        cap-round-lower 3pt (x0, y-start) (x1, y1);
+        cap-round-upper 3pt (lx0, ly0) (lx1, y-end);
+        cap-round-lower 3pt (lx0, y-start) (lx1, ly1);
       ]
       | (false, true) -> [
-        cap-round-left  3pt (x0, y0) (x-end, y1);
-        cap-round-right 3pt (x-start, y0) (x1, y1);
+        cap-round-left  3pt (lx0, ly0) (x-end, ly1);
+        cap-round-right 3pt (x-start, ly0) (lx1, ly1);
       ]
       | (false, false) -> [
-        cap-round-upper-left  3pt (x0, y0) (x-end, y-end);
-        cap-round-upper-right 3pt (x-start, y0) (x1, y-end);
-        cap-round-lower-left  3pt (x0, y-start) (x-end, y1);
-        cap-round-lower-right 3pt (x-start, y-start) (x1, y1);
+        cap-round-upper-left  3pt (lx0, ly0) (x-end, y-end);
+        cap-round-upper-right 3pt (x-start, ly0) (lx1, y-end);
+        cap-round-lower-left  3pt (lx0, y-start) (x-end, ly1);
+        cap-round-lower-right 3pt (x-start, y-start) (lx1, ly1);
       ]
     ) in
     List.map (stroke 1pt Color.black) graphs
   
+  let select-size w h (x0, y0) xs ys =
+      let lenx = List.length xs - 1 in
+      let leny = List.length ys - 1 in
+      let x = x0 + w - 1 in
+      let y = y0 + h - 1 in
+      let x1 = if x < lenx then x else x - lenx in
+      let y1 = if y < leny then y else y - leny in
+        select (x0, y0) (x1, y1) xs ys
+
+  let minimum (x0, y0) = select-size 1 1 (x0, y0)
+
+  let box (x0, y0) = select-size 2 2 (x0, y0)
+
+  let tall (x0, y0) = select-size 2 4 (x0, y0)
+
+  let wide (x0, y0) = select-size 4 2 (x0, y0)
+
+  let slim (x0, y0) = select-size 1 2 (x0, y0)
+
+  let flat (x0, y0) = select-size 2 1 (x0, y0)
+
+  let large (x0, y0) = select-size 4 4 (x0, y0)
+
   let-math \dontcare = math-char MathOrd `∅`
   
   let ruled-lines xs ys =

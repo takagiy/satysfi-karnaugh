@@ -14,8 +14,8 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 0         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (3, 3) (3, 0);
-      Karnaugh.select (1, 1) (2, 2);
+      Karnaugh.box (1, 1);
+      Karnaugh.slim (3, 3);
     ]);
   |
     \karnaugh-map(${zw})(${xy})([
@@ -24,7 +24,7 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 0         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (2, 1) (3, 2);
+      Karnaugh.box (2, 1);
     ]);
   |
     \karnaugh-map(${zw})(${xy})([
@@ -33,7 +33,7 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 0         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (2, 3) (2, 0);
+      Karnaugh.slim (2, 3);
     ]);
   |}
   +arrange {|
@@ -43,8 +43,8 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 1         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (3, 3) (0, 0);
-      Karnaugh.select (1, 1) (1, 2);
+      Karnaugh.box (3, 3);
+      Karnaugh.slim (1, 1);
     ]);
   |
     \karnaugh-map(${zw})(${xy})([
@@ -53,8 +53,8 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 1         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (3, 0) (0, 3);
-      Karnaugh.select (0, 1) (1, 2)
+      Karnaugh.tall (3, 0);
+      Karnaugh.box (0, 1);
     ]);
   |
     \karnaugh-map(${zw})(${xy})([
@@ -63,9 +63,9 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 1         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (3, 2) (0, 3);
-      Karnaugh.select (2, 3) (3, 0);
-      Karnaugh.select (0, 1) (0, 2);
+      Karnaugh.box (3, 2);
+      Karnaugh.box (2, 3);
+      Karnaugh.slim (0, 1);
     ]);
   |}
   +arrange {|
@@ -75,9 +75,9 @@ document (|
       ${| \dontcare | \dontcare | \dontcare | \dontcare |};
       ${| 1         | 0         | \dontcare | \dontcare |};
     ])([
-      Karnaugh.select (1, 0) (1, 0);
-      Karnaugh.select (3, 2) (0, 3);
-      Karnaugh.select (3, 3) (3, 0)
+      Karnaugh.minimum (1, 0);
+      Karnaugh.box (3, 2);
+      Karnaugh.slim (3, 3);
     ]);
   |}
 >
