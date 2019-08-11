@@ -67,3 +67,11 @@ The adbove will look like the following.
 * `Karnaugh.large` : `int * int -> lenght list -> length list -> graphics list`   
 `Karnaugh.large` : `(<start column>, <start row>) -> <grouping>`
     * Group 4x4 cells
+
+* `Karnaugh.group` : `int -> int -> int * int -> lenght list -> length list -> graphics list`   
+`Karnaugh.group` : ` <width> <height> (<start column>, <start row>) -> <grouping>`
+    * Group `width`x`height` cells
+
+* `Karnaugh.group-` : `int * int -> int * int -> lenght list -> length list -> graphics list`   
+`Karnaugh.group-` : `(<start column>, <start row>) (<last column>, <last row>) -> <grouping>`
+    * Group the cells in the specific range
