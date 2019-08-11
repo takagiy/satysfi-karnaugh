@@ -31,3 +31,39 @@ The adbove will look like the following.
 
 ![output](/docs/example.png)
 
+## reference
+* `\dontcare` : `[] math-cmd`
+
+    * “∅” in formula
+
+* `\karnaugh-map` : `[math; math; (math list) list; (length list -> length list -> graphics list) list] inline-cmd`   
+`\karnaugh-map` : `<label of the columns> <label of the rows> <contents> <groupings>`
+    * Draw a Karnaugh map
+
+* `Karnaugh.box` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.box` : `(<start column>, <start row>) -> <grouping>`
+    * Group 2x2 cells
+
+* `Karnaugh.tall` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.tall` : `(<start column>, <start row>) -> <grouping>`
+    * Group 2x4 cells
+
+* `Karnaugh.wide` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.wide` : `(<start column>, <start row>) -> <grouping>`
+    * Group 4x2 cells
+
+* `Karnaugh.slim` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.slim` : `(<start column>, <start row>) -> <grouping>`
+    * Group 1x2 cells
+
+* `Karnaugh.flat` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.flat` : `(<start column>, <start row>) -> <grouping>`
+    * Group 2x1 cells
+
+* `Karnaugh.minimum` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.minimum` : `(<start column>, <start row>) -> <grouping>`
+    * Group 1x1 cells
+
+* `Karnaugh.large` : `[int * int -> lenght list -> length list -> graphics list]`   
+`Karnaugh.large` : `(<start column>, <start row>) -> <grouping>`
+    * Group 4x4 cells
