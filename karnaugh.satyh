@@ -4,15 +4,15 @@
 
 module Karnaugh : sig
 
-  val select           : (int * int) -> (int * int) -> length list -> length list -> graphics list
-  val select-size      :  int -> int -> (int * int) -> length list -> length list -> graphics list
-  val minimum          : (int * int) -> length list -> length list -> graphics list
-  val box              : (int * int) -> length list -> length list -> graphics list
-  val tall             : (int * int) -> length list -> length list -> graphics list
-  val wide             : (int * int) -> length list -> length list -> graphics list
-  val slim             : (int * int) -> length list -> length list -> graphics list
-  val flat             : (int * int) -> length list -> length list -> graphics list
-  val large            : (int * int) -> length list -> length list -> graphics list
+  val group-           : int * int -> int * int -> length list -> length list -> graphics list
+  val group            : int -> int -> int * int -> length list -> length list -> graphics list
+  val minimum          : int * int -> length list -> length list -> graphics list
+  val box              : int * int -> length list -> length list -> graphics list
+  val tall             : int * int -> length list -> length list -> graphics list
+  val wide             : int * int -> length list -> length list -> graphics list
+  val slim             : int * int -> length list -> length list -> graphics list
+  val flat             : int * int -> length list -> length list -> graphics list
+  val large            : int * int -> length list -> length list -> graphics list
   direct \karnaugh-map : [math; math; (math list) list; (length list -> length list -> graphics list) list] inline-cmd
   direct \dontcare     : [] math-cmd
 
@@ -146,7 +146,7 @@ end = struct
         |> line-to   (x1     , y0     )
         |> terminate-path
   
-  let select (x0, y0) (x1, y1) xs ys =
+  let group- (x0, y0) (x1, y1) xs ys =
     let-rec nth idx lst =
       Option.from 0pt (List.nth idx lst) 
     in
@@ -179,28 +179,28 @@ end = struct
     ) in
     List.map (stroke 1pt Color.black) graphs
   
-  let select-size w h (x0, y0) xs ys =
+  let group w h (x0, y0) xs ys =
       let lenx = List.length xs - 1 in
       let leny = List.length ys - 1 in
       let x = x0 + w - 1 in
       let y = y0 + h - 1 in
       let x1 = if x < lenx then x else x - lenx in
       let y1 = if y < leny then y else y - leny in
-        select (x0, y0) (x1, y1) xs ys
+        group- (x0, y0) (x1, y1) xs ys
 
-  let minimum (x0, y0) = select-size 1 1 (x0, y0)
+  let minimum (x0, y0) = group 1 1 (x0, y0)
 
-  let box (x0, y0) = select-size 2 2 (x0, y0)
+  let box (x0, y0) = group 2 2 (x0, y0)
 
-  let tall (x0, y0) = select-size 2 4 (x0, y0)
+  let tall (x0, y0) = group 2 4 (x0, y0)
 
-  let wide (x0, y0) = select-size 4 2 (x0, y0)
+  let wide (x0, y0) = group 4 2 (x0, y0)
 
-  let slim (x0, y0) = select-size 1 2 (x0, y0)
+  let slim (x0, y0) = group 1 2 (x0, y0)
 
-  let flat (x0, y0) = select-size 2 1 (x0, y0)
+  let flat (x0, y0) = group 2 1 (x0, y0)
 
-  let large (x0, y0) = select-size 4 4 (x0, y0)
+  let large (x0, y0) = group 4 4 (x0, y0)
 
   let-math \dontcare = math-char MathOrd `∅`
   
@@ -236,7 +236,7 @@ end = struct
     | f _ [] = []
     | f (x :: xs) (y :: ys) = (f x y) :: list-map2 f xs ys
   
-  let-inline ctx \karnaugh-map math-labelx math-labely contents selections =
+  let-inline ctx \karnaugh-map math-labelx math-labely contents groupings =
     let math-to cellf math = cellf {${#math}} in
     let content-line0 = (
       match contents with
@@ -283,7 +283,7 @@ end = struct
         line-labelx :: line-headerx :: line-rest
     in
     let fn-content-rule xs ys =
-      List.map (fun s -> s xs ys) selections
+      List.map (fun s -> s xs ys) groupings
         |> List.concat 
         |> List.append (ruled-lines xs ys)
     in
