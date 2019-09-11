@@ -1,6 +1,9 @@
-examples.pdf: karnaugh.satyh local.satyh examples.saty
-	satysfi examples.saty -o examples.pdf
+examples.pdf: examples-local.saty karnaugh.satyh local.satyh
+	satysfi $< -o $@
+
+examples-local.saty: examples.saty
+	sed -e '/^@require: /s!^@require: karnaugh/!@import: !' $< > $@ 
 
 karnaugh.satyh: ../karnaugh.satyh
-	cp ../karnaugh.satyh .
+	cp $< .
 

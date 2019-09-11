@@ -1,0 +1,4 @@
+examples-local.saty
+karnaugh.satyh
+*.satysfi-aux
+*.pdf

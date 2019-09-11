@@ -1,9 +1,9 @@
 opam-version: "2.0"
 name:         "satysfi-karnaugh"
 version:      "0.0.1"
-synopsis:     "Drawing Karnaugh maps in SATySFi"
+synopsis:     "Document: Drawing Karnaugh maps in SATySFi"
 description:  """
-Drawing Karnaugh maps in SATySFi
+Document: Drawing Karnaugh maps in SATySFi
 
 This can be installed as a package for SATySFi by Satyrographos. (https://github.com/na4zagin3/satyrographos) 
 """
@@ -14,18 +14,27 @@ bug-reports:  "https://github.com/takagiy/satysfi-karnaugh/issues"
 dev-repo:     "git+https://github.com/takagiy/satysfi-karnaugh.git"
 license:      "MIT"
 depends: [
-  "satyrographos" {>= "0.0.2" & < "0.0.3"}
+  "satysfi" {>= "0.0.3" & < "0.0.4"}
+  "satyrographos" {>= "0.0.1" & < "0.0.3"}
+  "satysfi-lib-dist"
+  "satysfi-karnaugh" {= "0.0.1"}
 ]
-build: []
+build: [
+  ["satyrographos" "opam" "build"
+   "-name" "karnaugh-doc"
+   "-prefix" "%{prefix}%"
+   "-script" "%{build}%/Satyristes"]
+]
 install: [
   ["satyrographos" "opam" "install"
-   "-name" "karnaugh"
+   "-name" "karnaugh-doc"
    "-prefix" "%{prefix}%"
    "-script" "%{build}%/Satyristes"]
 ]
 remove: [
   ["satyrographos" "opam" "uninstall"
-   "-name" "karnaugh"
+   "-name" "karnaugh-doc"
    "-prefix" "%{prefix}%"
    "-script" "%{build}%/Satyristes"]
 ]
+
