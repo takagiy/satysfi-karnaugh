@@ -1,0 +1,19 @@
+(version "0.0.2")
+(library
+  (name "karnaugh")
+  (version "0.0.1")
+  (sources
+    ((package "karnaugh.satyh" "./karnaugh.satyh")))
+  (opam "satysfi-karnaugh.opam"))
+(libraryDoc
+  (name "karnaugh-doc")
+  (version "0.0.1")
+  (workingDirectory "examples")
+  (build
+    ((satysfi "examples.saty" "-o" "examples.pdf")))
+  (sources
+    ((doc "examples.pdf" "examples/examples.pdf")
+     (doc "examples.saty" "examples/examples.saty")
+     (doc "local.satyh" "examples/local.satyh")))
+  (opam "satysfi-karnaugh-doc.opam")
+  (dependencies ((karnaugh ()))))

@@ -1,5 +1,5 @@
 @require: stdjareport
-@import: karnaugh
+@require: karnaugh/karnaugh
 @import: local
 
 

@@ -1,16 +1,9 @@
-PREFIX=/usr/local
-PACKAGE_NAME=satysfi-karnaugh
-PACKAGE_DEST_DIR=$(PREFIX)/share/satysfi/$(PACKAGE_NAME)
+PACKAGE_NAME=karnaugh
 
-.PHONY: all doc install uninstall
+.PHONY: doc
 
-all:
+doc: examples/examples.pdf
 
-doc:
-
-install:
-	install -d "$(PACKAGE_DEST_DIR)/packages"
-	install -m 644 karnaugh.satyh "$(PACKAGE_DEST_DIR)/packages"
-
-uninstall:
-	rm -rf "$(PACKAGE_DEST_DIR)"
+examples/examples.pdf: examples/examples.saty satysfi-$(PACKAGE_NAME).opam karnaugh.satyh Satyristes
+	opam pin add satysfi-$(PACKAGE_NAME).opam "file://$(PWD)" -y
+	satyrographos opam build -name $(PACKAGE_NAME)-doc
